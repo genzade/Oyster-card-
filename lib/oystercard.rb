@@ -18,10 +18,8 @@ LIMIT=90
 
   private
 
-  def balance=(cash)
-    @balance = cash if cash.is_a?(Fixnum)
+  def balance=(cash) # excluding condition => equivalent to attr_writer :balance
+    @balance = cash if cash.is_a?(Fixnum) 
   end
-
-
 
 end
