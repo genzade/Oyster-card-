@@ -19,4 +19,14 @@ describe Oystercard do
     end
  end
 
+ describe '#deduct' do
+   it 'respond to deduct' do
+       is_expected.to respond_to(:deduct).with(1).argument
+   end
+
+   it 'deducts money' do
+     expect { oystercard.deduct(10) }.to change{ oystercard.balance }.by -10
+   end
+ end
+
 end

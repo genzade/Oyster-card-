@@ -56,6 +56,12 @@ describe 'User Story' do
    oystercard.top_up(max)
    expect {oystercard.top_up(1)}.to raise_error "Balance cannot exceed £#{Oystercard::LIMIT}"
  end
+ #In order to pay for my journey
+ # As a customer
+ # I need my fare deducted from my card
+ it 'respond to deduct' do
+   expect { oystercard.deduct(1) }.not_to raise_error
+ end
 
 
 
