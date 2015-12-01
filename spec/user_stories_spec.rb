@@ -2,9 +2,6 @@
 # As a customer
 # I want to add money to my card
 #
- # In order to protect my money
-# As a customer
-# I don't want to put too much money on my card
 #
 #In order to pay for my journey
 # As a customer
@@ -43,7 +40,7 @@
 # I need to have the correct fare calculated
 require 'oystercard'
 describe 'User Story' do
-  oystercard = Oystercard.new
+  let(:oystercard) { Oystercard.new }
   it 'respond to balance' do
     expect { oystercard.balance }.not_to raise_error
   end
@@ -51,4 +48,17 @@ describe 'User Story' do
   it 'responds to top_up' do
     expect { oystercard.top_up(1) }.not_to raise_error
   end
+  # In order to protect my money
+ # As a customer
+ # I don't want to put too much money on my card
+ it 'prevents balance from exceeding £90' do
+   max = Oystercard::LIMIT
+   oystercard.top_up(max)
+   expect {oystercard.top_up(1)}.to raise_error "Balance cannot exceed £#{Oystercard::LIMIT}"
+ end
+
+
+
+
+
 end
