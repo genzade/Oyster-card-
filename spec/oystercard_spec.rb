@@ -14,8 +14,8 @@ describe Oystercard do
       expect { oystercard.top_up(10) }.to change{ oystercard.balance }.by 10
     end
     it 'prevent balance from exceeding £90' do
-      oystercard.top_up(90)
-      expect {oystercard.top_up(1)}.to raise_error "Balance cannot exceed £#{Oystercard::LIMIT}"
+      oystercard.top_up(Oystercard::LIMIT)
+      expect {oystercard.top_up(Oystercard::MINIMUM)}.to raise_error "Balance cannot exceed £#{Oystercard::LIMIT}"
     end
  end
 
@@ -35,8 +35,13 @@ describe Oystercard do
   end
 
   it 'travelling is true when touching in' do
+    oystercard.top_up(Oystercard::MINIMUM)
     oystercard.touch_in
     expect(oystercard.travelling).to eq true
+  end
+
+  it 'raises an error if balance is less than minimum fair' do 
+    expect { oystercard.touch_in }.to raise_error 'Not enough funds available'
   end
  end
 
@@ -46,7 +51,7 @@ describe Oystercard do
   end
 
   it 'travelling is false when touching out' do
-    oystercard.touch_in ; oystercard.touch_out
+    oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in ; oystercard.touch_out
     expect(oystercard.travelling).to eq false
   end
 
