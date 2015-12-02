@@ -14,7 +14,7 @@ describe Oystercard do
 
  describe '#balance' do 
    it 'returns balance as 0' do
-     expect(oystercard.balance).to eq (0)
+     expect(oystercard.balance).to eq 0
    end
  end
  describe '#top_up' do
