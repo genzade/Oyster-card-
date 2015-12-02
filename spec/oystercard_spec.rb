@@ -3,6 +3,7 @@ describe Oystercard do
   #oystercard = Oystercard.new
 #let(:oystercard) { double :oystercard }
   let(:oystercard) { described_class.new }
+  let(:entry_station) { double :station }
    describe '#balance' do 
      it 'returns balance as 0' do
        expect(oystercard.balance).to eq (0)
@@ -24,14 +25,13 @@ describe Oystercard do
     expect(oystercard).to respond_to :touch_in
   end
 
-  it 'travelling is true when touching in' do
-    oystercard.top_up(Oystercard::MINIMUM)
-    oystercard.touch_in
-    expect(oystercard.travelling).to eq true
+  it 'raises an error if balance is less than minimum fair' do 
+    expect { oystercard.touch_in(entry_station) }.to raise_error 'Not enough funds available'
   end
 
-  it 'raises an error if balance is less than minimum fair' do 
-    expect { oystercard.touch_in }.to raise_error 'Not enough funds available'
+  it 'records entry station upon touching in' do
+    oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in(entry_station)
+    expect(oystercard.entry_station).to eq entry_station
   end
  end
 
@@ -40,14 +40,14 @@ describe Oystercard do
     expect(oystercard).to respond_to :touch_out
   end
 
-  it 'travelling is false when touching out' do
-    oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in ; oystercard.touch_out
-    expect(oystercard.travelling).to eq false
-  end
-
   it 'deducts minimum fare from balance' do
     oystercard.top_up(Oystercard::MINIMUM)
     expect { oystercard.touch_out }.to change{ oystercard.balance}.by -(Oystercard::MINIMUM)
+  end
+
+  it 'sets entry station to nil upon touching out' do
+    oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in(entry_station) ; oystercard.touch_out
+    expect(oystercard.entry_station).to be_nil
   end
 
  end
