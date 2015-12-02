@@ -17,10 +17,6 @@ LIMIT=90
     self.balance += cash
   end
 
-  def deduct(cash)
-    self.balance -= cash
-  end
-
   def touch_in
     raise 'Not enough funds available' if balance < MINIMUM
     @travelling = true
@@ -28,6 +24,7 @@ LIMIT=90
 
   def touch_out
     @travelling = false
+    deduct(MINIMUM)
   end
 
   def in_journey?
@@ -38,6 +35,10 @@ LIMIT=90
 
   def balance=(cash) # excluding condition => equivalent to attr_writer :balance
     @balance = cash if cash.is_a?(Fixnum) 
+  end
+
+  def deduct(cash)
+    self.balance -= cash
   end
 
 end

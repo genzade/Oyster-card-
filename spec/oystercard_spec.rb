@@ -19,16 +19,6 @@ describe Oystercard do
     end
  end
 
- describe '#deduct' do
-   it 'respond to deduct' do
-       is_expected.to respond_to(:deduct).with(1).argument
-   end
-
-   it 'deducts money' do
-     expect { oystercard.deduct(10) }.to change{ oystercard.balance }.by -10
-   end
- end
-
  describe '#touch_in' do
   it 'respond to touch in' do
     expect(oystercard).to respond_to :touch_in
@@ -53,6 +43,11 @@ describe Oystercard do
   it 'travelling is false when touching out' do
     oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in ; oystercard.touch_out
     expect(oystercard.travelling).to eq false
+  end
+
+  it 'deducts minimum fare from balance' do
+    oystercard.top_up(Oystercard::MINIMUM)
+    expect { oystercard.touch_out }.to change{ oystercard.balance}.by -(Oystercard::MINIMUM)
   end
 
  end

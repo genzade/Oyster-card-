@@ -38,5 +38,11 @@ describe 'User Stories' do
     expect { oystercard.touch_in }.to raise_error 'Not enough funds available'
   end
 
+  it 'deducts minimum fare when touching out' do
+    oystercard = Oystercard.new
+    oystercard.top_up(Oystercard::MINIMUM)
+    expect { oystercard.touch_out }.to change{ oystercard.balance}.by -(Oystercard::MINIMUM)
+  end
+
 end
 
