@@ -1,11 +1,13 @@
 class Oystercard
 
-attr_reader :balance
+attr_reader :balance, :travelling
 LIMIT=90
 
   def initialize
     self.balance = 0
+    @travelling = false
   end
+
 
   def top_up(cash)
     raise "Balance cannot exceed £#{LIMIT}" if balance + cash > LIMIT
@@ -14,6 +16,18 @@ LIMIT=90
 
   def deduct(cash)
     self.balance -= cash
+  end
+
+  def touch_in
+    @travelling = true
+  end
+
+  def touch_out
+    @travelling = false
+  end
+
+  def in_journey?
+    @travelling
   end
 
   private

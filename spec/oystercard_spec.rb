@@ -3,7 +3,7 @@ describe Oystercard do
   #oystercard = Oystercard.new
 #let(:oystercard) { double :oystercard }
   let(:oystercard) { described_class.new }
-   describe '#balance' do
+   describe '#balance' do 
      it 'returns balance as 0' do
        expect(oystercard.balance).to eq (0)
      end
@@ -27,6 +27,33 @@ describe Oystercard do
    it 'deducts money' do
      expect { oystercard.deduct(10) }.to change{ oystercard.balance }.by -10
    end
+ end
+
+ describe '#touch_in' do
+  it 'respond to touch in' do
+    expect(oystercard).to respond_to :touch_in
+  end
+
+  it 'travelling is true when touching in' do
+    oystercard.touch_in
+    expect(oystercard.travelling).to eq true
+  end
+ end
+
+ describe '#touch_out' do
+  it 'respond to touch out' do
+    expect(oystercard).to respond_to :touch_out
+  end
+
+  it 'travelling is false when touching out' do
+    oystercard.touch_in ; oystercard.touch_out
+    expect(oystercard.travelling).to eq false
+  end
+
+ end
+
+ it 'responding to in journey' do
+  expect(oystercard).to respond_to :in_journey?
  end
 
 end
