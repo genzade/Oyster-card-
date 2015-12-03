@@ -24,6 +24,7 @@ describe Oystercard do
     end
     it 'prevent balance from exceeding £90' do
       oystercard.top_up(Oystercard::LIMIT)
+      require 'pry'; binding.pry
       expect {oystercard.top_up(Oystercard::MINIMUM)}.to raise_error "Balance cannot exceed £#{Oystercard::LIMIT}"
     end
  end
