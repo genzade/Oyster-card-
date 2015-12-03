@@ -4,6 +4,7 @@ describe Oystercard do
 #let(:oystercard) { double :oystercard }
   let(:oystercard) { described_class.new }
   let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
    describe '#balance' do 
      it 'returns balance as 0' do
        expect(oystercard.balance).to eq (0)
@@ -21,39 +22,39 @@ describe Oystercard do
  end
 
  describe '#touch_in' do
-  it 'respond to touch in' do
-    expect(oystercard).to respond_to :touch_in
-  end
-
   it 'raises an error if balance is less than minimum fair' do 
     expect { oystercard.touch_in(entry_station) }.to raise_error 'Not enough funds available'
   end
 
-  it 'records entry station upon touching in' do
-    oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in(entry_station)
-    expect(oystercard.entry_station).to eq entry_station
-  end
  end
 
  describe '#touch_out' do
-  it 'respond to touch out' do
-    expect(oystercard).to respond_to :touch_out
-  end
-
   it 'deducts minimum fare from balance' do
     oystercard.top_up(Oystercard::MINIMUM)
-    expect { oystercard.touch_out }.to change{ oystercard.balance}.by -(Oystercard::MINIMUM)
+    expect { oystercard.touch_out(exit_station) }.to change{ oystercard.balance}.by -(Oystercard::MINIMUM)
   end
 
-  it 'sets entry station to nil upon touching out' do
-    oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in(entry_station) ; oystercard.touch_out
-    expect(oystercard.entry_station).to be_nil
+  it 'resets current journey upon touching out' do
+    oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in(entry_station) ; oystercard.touch_out(exit_station)
+    expect(oystercard.journey).to eq({})
   end
 
  end
 
- it 'responding to in journey' do
-  expect(oystercard).to respond_to :in_journey?
+ describe '#in_journey?' do 
+  it 'starts as false when not travelling' do
+    expect(oystercard.in_journey?).to be false
+  end
+
+  it 'changed to true when travelling' do
+    oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in(entry_station)
+    expect(oystercard.in_journey?).to be true
+  end
+ end
+
+ it 'records journey history' do
+  oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in(entry_station) ; oystercard.touch_out(exit_station)
+  expect(oystercard.history).to eq(:"Journey 1" => { entry_station: entry_station, exit_station: exit_station } )
  end
 
 end
