@@ -29,5 +29,6 @@ describe 'User Stories' do
     oystercard.top_up(Oystercard::MINIMUM) ; oystercard.touch_in('entry_station') ; oystercard.touch_out('exit_station')
     expect(oystercard.history).to eq(:"Journey 1" => { entry_station: 'entry_station', exit_station: 'exit_station' } )
   end
+  
 end
 
